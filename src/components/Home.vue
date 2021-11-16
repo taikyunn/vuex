@@ -4,14 +4,20 @@
     <p>{{ count }}</p>
     <p>2倍：{{ doubleCount }}</p>
     <p>3倍：{{ tripleCount }}</p>
-    <button @click="increament">+1</button>
-    <button @click="decreament">-1</button>
+    <!-- 引数を複数設定したい場合はオブジェクト形式で書くと渡せる -->
+    <button @click="increment(1)">+1</button>
+    <button @click="decrement(1)">-1</button>
+    <!-- <button @click="increment">+1</button>
+    <button @click="decrement">-1</button> -->
   </div>
-</template>
-
-<script>
-// gettersを効率よく使うためにmapGettersをimportする
+ gettersを効率よく使うためにmapGettersをimportする
 import { mapGetters } from "vuex"
+
+// mapMutationsをimport
+// import { mapMutations } from "vuex"
+
+// mapActionsをimport
+import { mapActions } from "vuex"
 
 export default {
   // 配列形式
@@ -49,14 +55,38 @@ export default {
 
 
   methods: {
-    increament() {
+    // スプレット演算子の形でmethods内に書く。引数はtamplate内にいどう
+    // ... mapMutations(["increment", "decrement"]),
+
+    // increment() {
       // this.$storeでアクセス
-      this.$store.state.count++;
-    },
-    decreament() {
+      // this.$store.state.count++;
+
+
+      // mutationsを使用する場合はcommitを使用する
+      // this.$store.commit('increment', 1)
+    // },
+
+    // decrement() {
       // this.$storeでアクセス
-      this.$store.state.count--;
-    },
+      // this.$store.state.count--;
+
+      // mutationsを使用する場合はcommitを使用する
+      // this.$store.commit('decrement', 1)
+    // },
+
+    // // action dispatchを使用して非同期的に扱う
+    // increment() {
+    //   // actionを実行するにはdispatch("mutation名", 引数)
+    //   this.$store.dispatch("increment", 1)
+    // },
+    // decrement() {
+    //   // actionを実行するにはdispatch("mutation名", 引数)
+    //   this.$store.dispatch("decrement", 1)
+    // },
+
+    // mapActionsを使用。引数はmapMutations同様template内に移動させる
+    ...mapActions(["increment", "decrement"]),
   }
 }
 </script>
