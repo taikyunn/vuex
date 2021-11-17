@@ -9,8 +9,15 @@
     <button @click="decrement(1)">-1</button>
     <!-- <button @click="increment">+1</button>
     <button @click="decrement">-1</button> -->
+
+    <input type="text" 
+          v-model="message">
+    <p>{{ message }}</p>
   </div>
- gettersを効率よく使うためにmapGettersをimportする
+</template>
+
+<script>
+// gettersを効率よく使うためにmapGettersをimportする
 import { mapGetters } from "vuex"
 
 // mapMutationsをimport
@@ -32,12 +39,27 @@ export default {
   // スプレット演算子
   // 以下のように書くと、computedを複数かける
   computed: {
-    ... mapGetters(['doubleCount', 'tripleCount']),
+    // mapGettersHelperを使用する際count/doubleCount...などの命名にしたい場合は第一引数を取る
+    ... mapGetters("count", ['doubleCount', 'tripleCount']),
+
+    // mapGettersHelperを使用しない場合
+    // return this.$store.getters["count/doubleCount"]
     count() {
       return this.$store.state.count
+    },
+
+    // vuexとv-modelを一緒に使用したい場合は、オブジェクト形式でgetとsetの二つを設定する
+    message: {
+      get(){
+         // messageを取得する
+        return this.$store.getters.message
+      },
+      set(value){
+        // messageをセットする
+        this.$store.dispatch("updateMessage", value)
+      },
     }
   },
-
 
   // {
   //   doubleCount() {
@@ -86,7 +108,7 @@ export default {
     // },
 
     // mapActionsを使用。引数はmapMutations同様template内に移動させる
-    ...mapActions(["increment", "decrement"]),
+    ...mapActions("count", ["increment", "decrement"]),
   }
 }
 </script>
